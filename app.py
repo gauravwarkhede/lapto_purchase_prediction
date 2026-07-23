@@ -1,4 +1,3 @@
-
 # ==============================================================================
 # FILE 1: requirements.txt (Required by Vercel)
 # Create a separate file named requirements.txt in your repository and paste this:
@@ -30,21 +29,21 @@ from flask import Flask, request, jsonify, render_template_string
 app = Flask(__name__)
 
 # --- MODEL LOADING & ARCHITECTURE INFERENCE ---
-# The model is a DecisionTreeClassifier[cite: 2]
+# The model is a DecisionTreeClassifier
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'DecisionTree.pkl')
 
 try:
     with open(MODEL_PATH, 'rb') as file:
         model = pickle.load(file)
         
-    # Extract feature names from the Decision Tree[cite: 2]
+    # Extract feature names from the Decision Tree
     if hasattr(model, 'feature_names_in_'):
         feature_names = model.feature_names_in_.tolist()
     else:
-        # Fallback to the exact features identified in the pickle dump[cite: 2]
+        # Re-using the features identified in the pickle, adapted for consumer demographics
         feature_names = ['Age', 'Gender', 'Region', 'Occupation', 'Income']
         
-    # Decision Trees use feature_importances_ (0 to 1 magnitude), unlike Logistic Regression
+    # Decision Trees use feature_importances_ (0 to 1 magnitude)
     if hasattr(model, 'feature_importances_'):
         feature_importance = model.feature_importances_.tolist()
     else:
@@ -63,7 +62,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futuristic Decision Tree Analytics</title>
+    <title>Futuristic E-Commerce Analytics</title>
     <!-- Chart.js for High-Performance Canvas Rendering -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -500,6 +499,11 @@ HTML_TEMPLATE = """
             70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
+        @keyframes pulseSuccess {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
         
         .animate-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
         .delay-1 { animation-delay: 0.1s; }
@@ -507,8 +511,9 @@ HTML_TEMPLATE = """
         .delay-3 { animation-delay: 0.3s; }
         .delay-4 { animation-delay: 0.4s; }
 
-        /* High Risk Alert Class applied dynamically via JS */
+        /* Dynamic Pulses */
         .alert-pulse { animation: pulseAlert 2s infinite; border-color: var(--danger) !important; }
+        .success-pulse { animation: pulseSuccess 2s infinite; border-color: var(--success) !important; }
 
         /* =========================================
            RESPONSIVE DESIGN
@@ -542,9 +547,9 @@ HTML_TEMPLATE = """
 
     <!-- HEADER -->
     <header class="app-header">
-        <h1>Predictive Analytics Engine</h1>
+        <h1>E-Commerce Analytics Engine</h1>
         <p style="font-size: 1.2rem; color: var(--text-secondary); font-weight: 300; letter-spacing: 1px;">
-            Advanced Decision Tree Node Classifier
+            Laptop Purchase Prediction Model
         </p>
     </header>
 
@@ -556,19 +561,18 @@ HTML_TEMPLATE = """
         <aside class="glass-card animate-up delay-1">
             <h3 class="panel-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                Student Profile Input
+                Customer Profile Input
             </h3>
             
             <div class="form-container">
                 <form id="predictionForm">
-                    <!-- Script to generate exact features found in DecisionTree.pkl[cite: 2] -->
                     <script>
                         const dtFeatures = [
-                            {id: 'Age', label: 'Age', type: 'number', step: '1', val: 21},
-                            {id: 'Gender', label: 'Gender (0=M, 1=F)', type: 'number', step: '1', val: 1},
-                            {id: 'Region', label: 'Region Code', type: 'number', step: '1', val: 3},
-                            {id: 'Occupation', label: 'Occupation Code', type: 'number', step: '1', val: 2},
-                            {id: 'Income', label: 'Household Income ($)', type: 'number', step: '100', val: 35000}
+                            {id: 'Age', label: 'Customer Age', type: 'number', step: '1', val: 28},
+                            {id: 'Gender', label: 'Gender (0=M, 1=F)', type: 'number', step: '1', val: 0},
+                            {id: 'Region', label: 'Region Code', type: 'number', step: '1', val: 2},
+                            {id: 'Occupation', label: 'Occupation Code', type: 'number', step: '1', val: 4},
+                            {id: 'Income', label: 'Annual Income ($)', type: 'number', step: '1000', val: 65000}
                         ];
                         
                         // Strict string concatenation to prevent Python template rendering errors
@@ -582,7 +586,7 @@ HTML_TEMPLATE = """
                         });
                     </script>
                     
-                    <button type="submit" class="btn-predict" id="submitBtn">Execute Neural Inference</button>
+                    <button type="submit" class="btn-predict" id="submitBtn">Execute Purchase Inference</button>
                 </form>
             </div>
         </aside>
@@ -596,52 +600,52 @@ HTML_TEMPLATE = """
             <div class="glass-card full-width result-display animate-up delay-2" id="resultCard">
                 <h3 class="panel-title" style="position: absolute; top: 1.5rem; left: 2rem; border:none;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                    Inference Engine Status
+                    Conversion Engine Status
                 </h3>
                 
                 <div id="resultOutput" class="result-status">
-                    <span style="font-size:1.2rem; color: var(--text-secondary); font-weight: 400;">Awaiting Matrix Input...</span>
+                    <span style="font-size:1.2rem; color: var(--text-secondary); font-weight: 400;">Awaiting Customer Matrix...</span>
                 </div>
                 
                 <div class="metric-cards">
                     <div class="metric">
-                        <div id="probStay" class="metric-value">--%</div>
-                        <div class="metric-label">Retention Confidence</div>
+                        <div id="probPurchase" class="metric-value">--%</div>
+                        <div class="metric-label">Purchase Probability</div>
                     </div>
                     <div class="metric">
-                        <div id="probDrop" class="metric-value">--%</div>
-                        <div class="metric-label">Attrition Probability</div>
+                        <div id="probAbandon" class="metric-value">--%</div>
+                        <div class="metric-label">Abandonment Probability</div>
                     </div>
                     <div class="metric">
-                        <div id="riskLevel" class="metric-value" style="color: #fff;">--</div>
-                        <div class="metric-label">Assessed Risk Factor</div>
+                        <div id="conversionPot" class="metric-value" style="color: #fff;">--</div>
+                        <div class="metric-label">Conversion Potential</div>
                     </div>
                 </div>
             </div>
 
             <!-- 2. DONUT CHART (PROBABILITY) -->
             <div class="glass-card animate-up delay-3">
-                <h3 class="panel-title">Confidence Distribution</h3>
+                <h3 class="panel-title">Conversion Confidence</h3>
                 <div class="chart-container"><canvas id="donutChart"></canvas></div>
             </div>
 
             <!-- 3. POLAR AREA CHART (FEATURE DISTRIBUTION) -->
             <div class="glass-card animate-up delay-3">
-                <h3 class="panel-title">Feature Vector Analysis</h3>
+                <h3 class="panel-title">Demographic Topology</h3>
                 <div class="chart-container"><canvas id="polarChart"></canvas></div>
             </div>
 
             <!-- 4. RADAR CHART (PROFILE) -->
             <div class="glass-card animate-up delay-4">
-                <h3 class="panel-title">Behavioral Topology</h3>
+                <h3 class="panel-title">Customer Behavioral Profile</h3>
                 <div class="radar-container"><canvas id="radarChart"></canvas></div>
             </div>
 
             <!-- 5. BAR CHART (DECISION TREE IMPORTANCE) -->
             <div class="glass-card animate-up delay-4">
-                <h3 class="panel-title">Decision Tree Node Importance Mapping</h3>
+                <h3 class="panel-title">Decision Tree Feature Impact Mapping</h3>
                 <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.4;">
-                    Visualizes the absolute Gini importance extracted directly from the DecisionTreeClassifier model architecture.
+                    Visualizes the absolute Gini importance extracted directly from the DecisionTreeClassifier model for predicting laptop purchases.
                 </p>
                 <div class="chart-container" style="height: 280px;"><canvas id="barChart"></canvas></div>
             </div>
@@ -661,9 +665,11 @@ HTML_TEMPLATE = """
         let donutChart, radarChart, barChart, polarChart;
 
         // --- SVG LOGOS (String Concatenation for safe Python rendering) ---
-        const SVG_DROPOUT = '<div class="logo-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div>';
+        // LAPTOP WITH CHECKMARK (Purchase)
+        const SVG_PURCHASE = '<div class="logo-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line><path d="M9 11l2 2 4-4"/></svg></div>';
         
-        const SVG_RETENTION = '<div class="logo-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>';
+        // LAPTOP WITH X (No Purchase)
+        const SVG_NO_PURCHASE = '<div class="logo-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line><line x1="9" y1="8" x2="15" y2="14"></line><line x1="15" y1="8" x2="9" y2="14"></line></svg></div>';
 
         // --- THEME COLOR ENGINE (Expanded) ---
         const themePalette = {
@@ -714,7 +720,7 @@ HTML_TEMPLATE = """
             donutChart = new Chart(ctxDonut, {
                 type: 'doughnut',
                 data: { 
-                    labels: ['Retention (0)', 'Dropout (1)'], 
+                    labels: ['Purchase Likelihood (1)', 'Abandonment (0)'], 
                     datasets: [{ 
                         data: [50, 50], 
                         backgroundColor: [currentTheme.success, currentTheme.danger], 
@@ -781,7 +787,6 @@ HTML_TEMPLATE = """
             });
 
             // 4. BAR CHART (Decision Tree Importances)
-            // Note: Importances are always positive in Decision Trees
             const bgColors = globalImportances.map(val => hexToRgba(currentTheme.primary, 0.6 + (val * 0.4)));
             const ctxBar = document.getElementById('barChart').getContext('2d');
             barChart = new Chart(ctxBar, {
@@ -841,19 +846,19 @@ HTML_TEMPLATE = """
             barChart.update();
             
             // Force redraw risk text and logo colors if already processed
-            const riskSpan = document.getElementById('riskLevel');
+            const convSpan = document.getElementById('conversionPot');
             const resOut = document.getElementById('resultOutput');
             const resCard = document.getElementById('resultCard');
             
-            if(riskSpan.textContent === 'Critical' || riskSpan.textContent === 'High') { 
-                riskSpan.style.color = colors.danger; 
+            if(convSpan.textContent === 'Very High' || convSpan.textContent === 'High') { 
+                convSpan.style.color = colors.success; 
+                resOut.style.color = colors.success;
+                resCard.style.borderColor = colors.success;
+            }
+            else if(convSpan.textContent === 'Low' || convSpan.textContent === 'Very Low') { 
+                convSpan.style.color = colors.danger; 
                 resOut.style.color = colors.danger;
                 resCard.style.borderColor = colors.danger;
-            }
-            else if(riskSpan.textContent === 'Low' || riskSpan.textContent === 'Minimal') { 
-                riskSpan.style.color = colors.success; 
-                resOut.style.color = colors.success;
-                resCard.style.borderColor = 'transparent';
             }
         }
 
@@ -901,60 +906,61 @@ HTML_TEMPLATE = """
             const currentTheme = document.body.className;
             const colors = themePalette[currentTheme];
 
-            // 1. UI Text & Logo Injection (Requested feature: output "student will dropout or not")
+            // 1. UI Text & Logo Injection for Laptop Purchase Model
             const resOut = document.getElementById('resultOutput');
             const resCard = document.getElementById('resultCard');
             
+            // Reset existing pulses
+            resCard.classList.remove('alert-pulse', 'success-pulse');
+            
             if (apiData.prediction_code === 1) {
-                resOut.innerHTML = SVG_DROPOUT + '<div style="margin-top:10px; font-size:2rem; letter-spacing: -1px;">' + apiData.prediction + '</div>';
+                // Positive outcome: Will Purchase
+                resOut.innerHTML = SVG_PURCHASE + '<div style="margin-top:10px; font-size:2rem; letter-spacing: -1px;">' + apiData.prediction + '</div>';
+                resOut.style.color = colors.success;
+                resOut.style.textShadow = '0 0 20px ' + hexToRgba(colors.success, 0.5);
+                resCard.classList.add('success-pulse');
+            } else {
+                // Negative outcome: Will Not Purchase
+                resOut.innerHTML = SVG_NO_PURCHASE + '<div style="margin-top:10px; font-size:2rem; letter-spacing: -1px;">' + apiData.prediction + '</div>';
                 resOut.style.color = colors.danger;
                 resOut.style.textShadow = '0 0 20px ' + hexToRgba(colors.danger, 0.5);
                 resCard.classList.add('alert-pulse');
-            } else {
-                resOut.innerHTML = SVG_RETENTION + '<div style="margin-top:10px; font-size:2rem; letter-spacing: -1px;">' + apiData.prediction + '</div>';
-                resOut.style.color = colors.success;
-                resOut.style.textShadow = '0 0 20px ' + hexToRgba(colors.success, 0.5);
-                resCard.classList.remove('alert-pulse');
-                resCard.style.borderColor = 'transparent';
-                resCard.style.boxShadow = ''; // reset pulse
             }
             
             // 2. KPI Metrics
-            // Formatting with counters for futuristic feel
-            document.getElementById('probStay').textContent = apiData.probability_stay.toFixed(1) + '%';
-            document.getElementById('probDrop').textContent = apiData.probability_dropout.toFixed(1) + '%';
+            document.getElementById('probPurchase').textContent = apiData.probability_purchase.toFixed(1) + '%';
+            document.getElementById('probAbandon').textContent = apiData.probability_abandon.toFixed(1) + '%';
             
-            const riskSpan = document.getElementById('riskLevel');
-            riskSpan.textContent = apiData.risk_level;
+            const convSpan = document.getElementById('conversionPot');
+            convSpan.textContent = apiData.conversion_level;
             if (apiData.prediction_code === 1) {
-                riskSpan.style.color = colors.danger;
+                convSpan.style.color = colors.success;
             } else {
-                riskSpan.style.color = colors.success;
+                convSpan.style.color = colors.danger;
             }
 
-            // 3. Update Donut Chart Data
-            donutChart.data.datasets[0].data = [apiData.probability_stay, apiData.probability_dropout];
+            // 3. Update Donut Chart Data (Index 0 = Purchase/Success, Index 1 = Abandon/Danger)
+            donutChart.data.datasets[0].data = [apiData.probability_purchase, apiData.probability_abandon];
             donutChart.update();
 
             // 4. Update Polar Area Chart Data
-            // We scale the raw inputs down to a relative visual distribution
             const rawInputs = [
                 inputData.Age || 0,
-                (inputData.Gender || 0) * 20, // Scale small numbers for visibility
+                (inputData.Gender || 0) * 20, 
                 (inputData.Region || 0) * 10,
                 (inputData.Occupation || 0) * 10,
-                (inputData.Income || 0) / 1000 // Scale large numbers down
+                (inputData.Income || 0) / 1000 
             ];
             polarChart.data.datasets[0].data = rawInputs;
             polarChart.update();
 
             // 5. Update Radar Chart (Normalized Profile)
             radarChart.data.datasets[0].data = [
-                (inputData.Age / 50) * 100, // Assuming max age 50 for scaling
+                (inputData.Age / 100) * 100, // Assuming max age 100 
                 inputData.Gender * 100,
                 (inputData.Region / 10) * 100,
                 (inputData.Occupation / 10) * 100,
-                (inputData.Income / 100000) * 100 // Assuming max 100k for scaling
+                (inputData.Income / 150000) * 100 // Assuming max 150k for basic scaling
             ];
             radarChart.update();
         }
@@ -986,43 +992,38 @@ def predict():
         return jsonify({'error': 'Decision Tree Model failed to load into memory.'}), 500
 
     try:
-        # Extract payload from frontend
         data = request.get_json()
         
-        # Build the exact feature array the model expects[cite: 2]
         input_data = []
         for feature in feature_names:
             val = float(data.get(feature, 0.0))
             input_data.append(val)
             
-        # Reshape for Sklearn prediction (1 sample, n features)
         features_array = np.array(input_data).reshape(1, -1)
         
-        # Execute Decision Tree methods
         prediction_val = int(model.predict(features_array)[0])
         
-        # Handle probability logic (Decision trees sometimes output exact 0.0/1.0 probabilities at leaf nodes)
         if hasattr(model, 'predict_proba'):
             probabilities = model.predict_proba(features_array)[0]
         else:
-            # Fallback if probability isn't supported
+            # Fallback if model strictly outputs classes
             probabilities = [1.0, 0.0] if prediction_val == 0 else [0.0, 1.0]
             
-        # Format exact output string requested by user
+        # 1 = Purchase (Positive Outcome), 0 = No Purchase (Negative Outcome)
+        # Note: Decision tree order relies on how it was trained, we assume index 1 is class 1.
         if prediction_val == 1:
-            result_text = "Student will dropout"
-            # Calculate dynamic risk phrasing
-            risk = "Critical" if probabilities[1] > 0.8 else "High"
+            result_text = "User will purchase laptop"
+            conv_potential = "Very High" if probabilities[1] > 0.8 else "High"
         else:
-            result_text = "Student will not dropout"
-            risk = "Minimal" if probabilities[0] > 0.8 else "Low"
+            result_text = "User will not purchase laptop"
+            conv_potential = "Very Low" if probabilities[0] > 0.8 else "Low"
             
         return jsonify({
             'prediction': result_text,
             'prediction_code': prediction_val,
-            'probability_dropout': float(probabilities[1] * 100),
-            'probability_stay': float(probabilities[0] * 100),
-            'risk_level': risk,
+            'probability_purchase': float(probabilities[1] * 100),
+            'probability_abandon': float(probabilities[0] * 100),
+            'conversion_level': conv_potential,
             'input_echo': input_data
         })
 
