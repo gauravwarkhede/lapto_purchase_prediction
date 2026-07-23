@@ -72,7 +72,6 @@ HTML_TEMPLATE = """
             --shadow-opacity: 0.2;
         }
 
-        /* 1. Default: Midnight Glass */
         body.theme-default {
             --bg-color: #0b1120;
             --surface-glass: rgba(30, 41, 59, 0.6);
@@ -87,7 +86,6 @@ HTML_TEMPLATE = """
                            radial-gradient(circle at 85% 85%, rgba(20, 184, 166, 0.15) 0%, transparent 40%);
         }
 
-        /* 2. Cyberpunk: High Contrast Neon */
         body.theme-cyberpunk {
             --bg-color: #050510;
             --surface-glass: rgba(15, 5, 25, 0.7);
@@ -102,7 +100,6 @@ HTML_TEMPLATE = """
                            radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.15) 0%, transparent 45%);
         }
 
-        /* 3. Deep Forest */
         body.theme-forest {
             --bg-color: #051008;
             --surface-glass: rgba(10, 25, 15, 0.75);
@@ -117,7 +114,6 @@ HTML_TEMPLATE = """
                            radial-gradient(circle at 80% 70%, rgba(168, 181, 69, 0.1) 0%, transparent 50%);
         }
 
-        /* 4. Glacial Ice */
         body.theme-ice {
             --bg-color: #000c18;
             --surface-glass: rgba(5, 20, 40, 0.65);
@@ -132,7 +128,6 @@ HTML_TEMPLATE = """
                            radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.15) 0%, transparent 60%);
         }
 
-        /* 5. Magic Purple */
         body.theme-magic {
             --bg-color: #0c0014;
             --surface-glass: rgba(25, 5, 45, 0.7);
@@ -147,7 +142,6 @@ HTML_TEMPLATE = """
                            radial-gradient(circle at 70% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
         }
 
-        /* 6. Solar Flare */
         body.theme-solar {
             --bg-color: #1a0500;
             --surface-glass: rgba(40, 10, 0, 0.8);
@@ -161,7 +155,6 @@ HTML_TEMPLATE = """
             --bg-gradient: radial-gradient(circle at 50% 0%, rgba(249, 115, 22, 0.2) 0%, transparent 60%);
         }
 
-        /* 7. Abyssal Void */
         body.theme-void {
             --bg-color: #000000;
             --surface-glass: rgba(10, 10, 10, 0.9);
@@ -175,7 +168,6 @@ HTML_TEMPLATE = """
             --bg-gradient: none;
         }
 
-        /* 8. Neon Synthwave */
         body.theme-synthwave {
             --bg-color: #0f0518;
             --surface-glass: rgba(20, 10, 40, 0.7);
@@ -215,7 +207,7 @@ HTML_TEMPLATE = """
             grid-template-columns: 380px 1fr;
             gap: 2rem;
             padding: 0 1rem;
-            align-items: start; /* FIXED: Prevents grid items from stretching weirdly */
+            align-items: start;
         }
 
         /* =========================================
@@ -235,6 +227,8 @@ HTML_TEMPLATE = """
                         border-color var(--transition-speed) ease;
             position: relative;
             overflow: hidden;
+            /* REMOVED opacity:0 to ensure elements are always perfectly visible */
+            opacity: 1 !important; 
         }
         
         .glass-card::before {
@@ -285,7 +279,6 @@ HTML_TEMPLATE = """
         .app-header {
             text-align: center;
             padding: 2rem 1rem 3rem 1rem;
-            animation: fadeInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .app-header h1 {
@@ -383,10 +376,10 @@ HTML_TEMPLATE = """
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-            align-items: start;
+            align-content: start;
         }
         
-        .full-width { grid-column: 1 / -1; }
+        .full-span-panel { grid-column: 1 / -1; }
         
         h3.panel-title {
             font-size: 1.1rem;
@@ -399,8 +392,8 @@ HTML_TEMPLATE = """
             padding-bottom: 0.75rem;
         }
 
-        /* Result Display Area */
-        .result-display {
+        /* Result Display Area (RENAMED to avoid adblockers) */
+        .status-container {
             text-align: center;
             padding: 3rem 2rem;
             display: flex;
@@ -410,7 +403,7 @@ HTML_TEMPLATE = """
             position: relative;
         }
         
-        .result-status {
+        .status-typography {
             font-size: 2.5rem;
             font-weight: 800;
             margin: 1.5rem 0;
@@ -471,11 +464,7 @@ HTML_TEMPLATE = """
         .chart-container { position: relative; height: 320px; width: 100%; }
         .radar-container { position: relative; height: 350px; width: 100%; }
 
-        /* =========================================
-           ANIMATIONS & KEYFRAMES
-           ========================================= */
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        /* Dynamic Pulses (Kept these for visual feedback upon running inference) */
         @keyframes pulseAlert {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
             70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
@@ -487,12 +476,6 @@ HTML_TEMPLATE = """
             100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
         
-        .animate-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-
         .alert-pulse { animation: pulseAlert 2s infinite; border-color: var(--danger) !important; }
         .success-pulse { animation: pulseSuccess 2s infinite; border-color: var(--success) !important; }
 
@@ -507,7 +490,7 @@ HTML_TEMPLATE = """
 </head>
 <body class="theme-default">
 
-    <nav class="top-nav animate-up">
+    <nav class="top-nav">
         <select id="themeSelector" class="theme-selector" onchange="changeTheme(this.value)">
             <option value="theme-default">Theme: Midnight Glass</option>
             <option value="theme-cyberpunk">Theme: Cyberpunk Core</option>
@@ -530,7 +513,7 @@ HTML_TEMPLATE = """
     <div class="container">
         
         <!-- SIDEBAR -->
-        <aside class="glass-card animate-up delay-1">
+        <aside class="glass-card">
             <h3 class="panel-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Customer Profile Input
@@ -538,7 +521,7 @@ HTML_TEMPLATE = """
             
             <div class="form-container">
                 <form id="predictionForm">
-                    <!-- FIXED: Replaced document.write() with safe, hardcoded HTML inputs -->
+                    <!-- Standard Hardcoded Inputs -->
                     <div class="input-group">
                         <label for="Age">Customer Age</label>
                         <input type="number" id="Age" name="Age" step="1" value="28" required>
@@ -568,14 +551,14 @@ HTML_TEMPLATE = """
         <!-- MAIN DASHBOARD -->
         <main class="dashboard-grid">
             
-            <!-- 1. PRIMARY RESULT PANEL (FIXED CSS structure for full visibility) -->
-            <div class="glass-card full-width result-display animate-up delay-2" id="resultCard">
+            <!-- 1. PRIMARY RESULT PANEL (Renamed completely for Adblocker evasion) -->
+            <div class="glass-card full-span-panel status-container" id="mainStatusBoard">
                 <h3 class="panel-title" style="width: 100%; border:none; justify-content: center; margin-bottom: 0;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                     Conversion Engine Status
                 </h3>
                 
-                <div id="resultOutput" class="result-status">
+                <div id="mainPredictionText" class="status-typography">
                     <span style="font-size:1.2rem; color: var(--text-secondary); font-weight: 400;">Awaiting Customer Matrix...</span>
                 </div>
                 
@@ -595,22 +578,22 @@ HTML_TEMPLATE = """
                 </div>
             </div>
 
-            <div class="glass-card animate-up delay-3">
+            <div class="glass-card">
                 <h3 class="panel-title">Conversion Confidence</h3>
                 <div class="chart-container"><canvas id="donutChart"></canvas></div>
             </div>
 
-            <div class="glass-card animate-up delay-3">
+            <div class="glass-card">
                 <h3 class="panel-title">Demographic Topology</h3>
                 <div class="chart-container"><canvas id="polarChart"></canvas></div>
             </div>
 
-            <div class="glass-card animate-up delay-4">
+            <div class="glass-card">
                 <h3 class="panel-title">Customer Behavioral Profile</h3>
                 <div class="radar-container"><canvas id="radarChart"></canvas></div>
             </div>
 
-            <div class="glass-card animate-up delay-4">
+            <div class="glass-card">
                 <h3 class="panel-title">Decision Tree Feature Impact Mapping</h3>
                 <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.4;">
                     Visualizes the absolute Gini importance extracted directly from the DecisionTreeClassifier model for predicting laptop purchases.
@@ -752,8 +735,8 @@ HTML_TEMPLATE = """
             barChart.update();
             
             const convSpan = document.getElementById('conversionPot');
-            const resOut = document.getElementById('resultOutput');
-            const resCard = document.getElementById('resultCard');
+            const resOut = document.getElementById('mainPredictionText');
+            const resCard = document.getElementById('mainStatusBoard');
             
             if(convSpan.textContent === 'Very High' || convSpan.textContent === 'High') { 
                 convSpan.style.color = colors.success; resOut.style.color = colors.success; resCard.style.borderColor = colors.success;
@@ -802,8 +785,8 @@ HTML_TEMPLATE = """
             const currentTheme = document.body.className;
             const colors = themePalette[currentTheme];
 
-            const resOut = document.getElementById('resultOutput');
-            const resCard = document.getElementById('resultCard');
+            const resOut = document.getElementById('mainPredictionText');
+            const resCard = document.getElementById('mainStatusBoard');
             
             resCard.classList.remove('alert-pulse', 'success-pulse');
             
