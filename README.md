@@ -1,2 +1,1 @@
-# lapto_purchase_prediction
-https://lapto-purchase-prediction-lmyo7gtsk-gdga.vercel.app/
+https://lapto-purchase-prediction-za8c-rljfnv1jc-gdga.vercel.app/
