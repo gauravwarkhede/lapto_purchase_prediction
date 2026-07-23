@@ -227,7 +227,6 @@ HTML_TEMPLATE = """
                         border-color var(--transition-speed) ease;
             position: relative;
             overflow: hidden;
-            /* REMOVED opacity:0 to ensure elements are always perfectly visible */
             opacity: 1 !important; 
         }
         
@@ -318,7 +317,7 @@ HTML_TEMPLATE = """
             transition: color var(--transition-speed) ease;
         }
         
-        .input-group input {
+        .input-group input, .input-group select {
             width: 100%;
             padding: 1rem 1.2rem;
             background: rgba(0, 0, 0, 0.3);
@@ -330,7 +329,21 @@ HTML_TEMPLATE = """
             transition: all 0.3s ease;
         }
         
-        .input-group input:focus {
+        .input-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat, repeat;
+            background-position: right 1.2rem top 50%, 0 0;
+            background-size: .65em auto, 100%;
+            cursor: pointer;
+        }
+        
+        .input-group select option {
+            background: #111;
+            color: #fff;
+        }
+
+        .input-group input:focus, .input-group select:focus {
             outline: none;
             border-color: var(--accent-primary);
             background: rgba(0, 0, 0, 0.5);
@@ -392,7 +405,12 @@ HTML_TEMPLATE = """
             padding-bottom: 0.75rem;
         }
 
-        /* Result Display Area (RENAMED to avoid adblockers) */
+        /* UX Transition Class */
+        .processing-fade {
+            opacity: 0.5 !important;
+            transform: scale(0.98) !important;
+        }
+
         .status-container {
             text-align: center;
             padding: 3rem 2rem;
@@ -401,6 +419,7 @@ HTML_TEMPLATE = """
             justify-content: center;
             align-items: center;
             position: relative;
+            transition: all 0.4s ease; /* For smooth shrinking/fading on submit */
         }
         
         .status-typography {
@@ -464,7 +483,6 @@ HTML_TEMPLATE = """
         .chart-container { position: relative; height: 320px; width: 100%; }
         .radar-container { position: relative; height: 350px; width: 100%; }
 
-        /* Dynamic Pulses (Kept these for visual feedback upon running inference) */
         @keyframes pulseAlert {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
             70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
@@ -521,23 +539,44 @@ HTML_TEMPLATE = """
             
             <div class="form-container">
                 <form id="predictionForm">
-                    <!-- Standard Hardcoded Inputs -->
+                    
                     <div class="input-group">
                         <label for="Age">Customer Age</label>
                         <input type="number" id="Age" name="Age" step="1" value="28" required>
                     </div>
+
+                    <!-- CATEGORICAL DROPDOWNS -->
                     <div class="input-group">
-                        <label for="Gender">Gender (0=M, 1=F)</label>
-                        <input type="number" id="Gender" name="Gender" step="1" value="0" required>
+                        <label for="Gender">Gender</label>
+                        <select id="Gender" name="Gender" required>
+                            <option value="0" selected>Male (0)</option>
+                            <option value="1">Female (1)</option>
+                        </select>
                     </div>
+                    
                     <div class="input-group">
-                        <label for="Region">Region Code</label>
-                        <input type="number" id="Region" name="Region" step="1" value="2" required>
+                        <label for="Region">Region</label>
+                        <select id="Region" name="Region" required>
+                            <option value="0">Category 0</option>
+                            <option value="1">Category 1</option>
+                            <option value="2" selected>Category 2</option>
+                            <option value="3">Category 3</option>
+                            <option value="4">Category 4</option>
+                        </select>
                     </div>
+                    
                     <div class="input-group">
-                        <label for="Occupation">Occupation Code</label>
-                        <input type="number" id="Occupation" name="Occupation" step="1" value="4" required>
+                        <label for="Occupation">Occupation</label>
+                        <select id="Occupation" name="Occupation" required>
+                            <option value="0">Classification 0</option>
+                            <option value="1">Classification 1</option>
+                            <option value="2">Classification 2</option>
+                            <option value="3">Classification 3</option>
+                            <option value="4" selected>Classification 4</option>
+                            <option value="5">Classification 5</option>
+                        </select>
                     </div>
+
                     <div class="input-group">
                         <label for="Income">Annual Income ($)</label>
                         <input type="number" id="Income" name="Income" step="1000" value="65000" required>
@@ -551,7 +590,6 @@ HTML_TEMPLATE = """
         <!-- MAIN DASHBOARD -->
         <main class="dashboard-grid">
             
-            <!-- 1. PRIMARY RESULT PANEL (Renamed completely for Adblocker evasion) -->
             <div class="glass-card full-span-panel status-container" id="mainStatusBoard">
                 <h3 class="panel-title" style="width: 100%; border:none; justify-content: center; margin-bottom: 0;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
@@ -749,16 +787,25 @@ HTML_TEMPLATE = """
             e.preventDefault();
             
             const btn = document.getElementById('submitBtn');
-            const originalText = btn.innerHTML;
             btn.innerHTML = 'Processing Matrix...';
-            btn.style.opacity = '0.8';
+            btn.style.opacity = '0.7';
             btn.style.pointerEvents = 'none';
+
+            // UX FIX: Give visual feedback that a request has been fired
+            const resCard = document.getElementById('mainStatusBoard');
+            resCard.classList.add('processing-fade');
 
             const formData = new FormData(e.target);
             const dataObj = {};
-            formData.forEach((value, key) => { dataObj[key] = parseFloat(value); });
+            formData.forEach((value, key) => { 
+                dataObj[key] = value ? parseFloat(value) : 0.0; 
+            });
 
             try {
+                // UX FIX: Force a small 600ms delay so the user explicitly sees 
+                // the app processing data. This cures the "frozen app" illusion.
+                await new Promise(resolve => setTimeout(resolve, 600));
+
                 const response = await fetch('/predict', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -775,9 +822,13 @@ HTML_TEMPLATE = """
             } catch (error) { 
                 alert('Connection terminated: ' + error.message); 
             } finally {
-                btn.innerHTML = originalText;
+                // Restore Button State
+                btn.innerHTML = 'Execute Purchase Inference';
                 btn.style.opacity = '1';
                 btn.style.pointerEvents = 'auto';
+                
+                // Restore Card Visbility
+                resCard.classList.remove('processing-fade');
             }
         });
 
@@ -788,7 +839,9 @@ HTML_TEMPLATE = """
             const resOut = document.getElementById('mainPredictionText');
             const resCard = document.getElementById('mainStatusBoard');
             
+            // Force reflow to restart CSS animations if output is exactly the same
             resCard.classList.remove('alert-pulse', 'success-pulse');
+            void resCard.offsetWidth;
             
             if (apiData.prediction_code === 1) {
                 resOut.innerHTML = SVG_PURCHASE + '<div style="margin-top:10px; font-size:2rem; letter-spacing: -1px;">' + apiData.prediction + '</div>';
@@ -856,14 +909,22 @@ def predict():
         
         input_data = []
         for feature in feature_names:
-            val = float(data.get(feature, 0.0))
-            input_data.append(val)
+            val = data.get(feature)
+            # Extra safety guard for Python parsing
+            if val is None or str(val).strip() == '':
+                val = 0.0
+            input_data.append(float(val))
             
         features_array = np.array(input_data).reshape(1, -1)
         prediction_val = int(model.predict(features_array)[0])
         
+        # Robust Probability checking for Sklearn Trees
         if hasattr(model, 'predict_proba'):
-            probabilities = model.predict_proba(features_array)[0]
+            prob_array = model.predict_proba(features_array)[0]
+            if len(prob_array) >= 2:
+                probabilities = prob_array
+            else:
+                probabilities = [1.0, 0.0] if prediction_val == 0 else [0.0, 1.0]
         else:
             probabilities = [1.0, 0.0] if prediction_val == 0 else [0.0, 1.0]
             
