@@ -67,6 +67,7 @@ HTML_TEMPLATE = """
            ========================================= */
         :root {
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
             --transition-speed: 0.4s;
             --glass-blur: 16px;
             --shadow-opacity: 0.2;
@@ -338,41 +339,26 @@ HTML_TEMPLATE = """
             cursor: pointer;
         }
         
-        .input-group select option {
-            background: #111;
-            color: #fff;
-        }
-
+        .input-group select option { background: #111; color: #fff; }
         .input-group input:focus, .input-group select:focus {
-            outline: none;
-            border-color: var(--accent-primary);
+            outline: none; border-color: var(--accent-primary);
             background: rgba(0, 0, 0, 0.5);
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
             transform: translateY(-2px);
         }
 
         .btn-predict {
-            width: 100%;
-            padding: 1.2rem;
-            margin-top: 1rem;
+            width: 100%; padding: 1.2rem; margin-top: 1rem;
             background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
+            border: none; border-radius: 12px; color: white;
+            font-size: 1.1rem; font-weight: 700; cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-transform: uppercase; letter-spacing: 2px;
+            position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         
         .btn-predict::after {
-            content: '';
-            position: absolute;
+            content: ''; position: absolute;
             top: -50%; left: -50%; width: 200%; height: 200%;
             background: linear-gradient(transparent, rgba(255,255,255,0.2), transparent);
             transform: rotate(45deg) translateY(-100%);
@@ -388,111 +374,72 @@ HTML_TEMPLATE = """
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            align-content: start;
+            gap: 1.5rem; align-content: start;
         }
         
         .full-span-panel { grid-column: 1 / -1; }
         
         h3.panel-title {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-bottom: 1px solid var(--surface-border);
-            padding-bottom: 0.75rem;
+            font-size: 1.1rem; color: var(--text-secondary);
+            margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;
+            border-bottom: 1px solid var(--surface-border); padding-bottom: 0.75rem;
         }
 
         /* UX Transition Class */
-        .processing-fade {
-            opacity: 0.5 !important;
-            transform: scale(0.98) !important;
-        }
+        .processing-fade { opacity: 0.5 !important; transform: scale(0.98) !important; }
 
         .status-container {
-            text-align: center;
-            padding: 3rem 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            transition: all 0.4s ease; /* For smooth shrinking/fading on submit */
+            text-align: center; padding: 3rem 2rem; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; position: relative;
+            transition: all 0.4s ease;
         }
         
         .status-typography {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 1.5rem 0;
-            transition: color var(--transition-speed) ease, text-shadow 0.3s ease;
-            letter-spacing: -0.5px;
+            font-size: 2.5rem; font-weight: 800; margin: 1.5rem 0;
+            transition: color var(--transition-speed) ease, text-shadow 0.3s ease; letter-spacing: -0.5px;
         }
         
         .logo-container svg {
-            width: 72px;
-            height: 72px;
-            stroke: currentColor;
-            stroke-width: 1.5;
-            transition: all var(--transition-speed) ease;
-            filter: drop-shadow(0 0 10px currentColor);
+            width: 72px; height: 72px; stroke: currentColor; stroke-width: 1.5;
+            transition: all var(--transition-speed) ease; filter: drop-shadow(0 0 10px currentColor);
         }
         
-        .metric-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            width: 100%;
-            margin-top: 1rem;
-        }
-        
+        .metric-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; width: 100%; margin-top: 1rem; }
         .metric {
-            text-align: center;
-            padding: 1.5rem 1rem;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 16px;
-            border: 1px solid var(--surface-border);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            text-align: center; padding: 1.5rem 1rem; background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px; border: 1px solid var(--surface-border);
+            transition: all 0.3s ease; position: relative; overflow: hidden;
         }
-        
-        .metric:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-5px);
-            background: rgba(0, 0, 0, 0.6);
-        }
-        
-        .metric-value {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--accent-secondary);
-            transition: color var(--transition-speed) ease;
-            margin-bottom: 0.5rem;
-        }
-        
-        .metric-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
+        .metric:hover { border-color: var(--accent-primary); transform: translateY(-5px); background: rgba(0, 0, 0, 0.6); }
+        .metric-value { font-size: 2.2rem; font-weight: 800; color: var(--accent-secondary); transition: color var(--transition-speed) ease; margin-bottom: 0.5rem; }
+        .metric-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
         .chart-container { position: relative; height: 320px; width: 100%; }
         .radar-container { position: relative; height: 350px; width: 100%; }
 
-        @keyframes pulseAlert {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        /* Termial Output for Decision Path */
+        .terminal-output {
+            font-family: var(--font-mono);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
         }
-        @keyframes pulseSuccess {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        
+        .rule-step {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+        .rule-bullet { color: var(--accent-secondary); font-weight: bold; }
+
+        @keyframes pulseAlert { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        @keyframes pulseSuccess { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
         
         .alert-pulse { animation: pulseAlert 2s infinite; border-color: var(--danger) !important; }
         .success-pulse { animation: pulseSuccess 2s infinite; border-color: var(--success) !important; }
@@ -632,11 +579,25 @@ HTML_TEMPLATE = """
             </div>
 
             <div class="glass-card">
-                <h3 class="panel-title">Decision Tree Feature Impact Mapping</h3>
+                <h3 class="panel-title">Overall Node Impact Mapping</h3>
                 <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.4;">
-                    Visualizes the absolute Gini importance extracted directly from the DecisionTreeClassifier model for predicting laptop purchases.
+                    Visualizes the absolute Gini importance extracted directly from the DecisionTreeClassifier architecture.
                 </p>
                 <div class="chart-container" style="height: 280px;"><canvas id="barChart"></canvas></div>
+            </div>
+
+            <!-- NEW FEATURE: Algorithmic Decision Path Output -->
+            <div class="glass-card full-span-panel" id="decisionPathCard">
+                <h3 class="panel-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                    Algorithmic Decision Path
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    This terminal output exposes the exact mathematical rules the Decision Tree traversed to arrive at the final prediction for this specific customer matrix.
+                </p>
+                <div id="terminalBody" class="terminal-output">
+                    <span style="color: var(--text-secondary);">> Standby. Matrix inputs required to generate computational path...</span>
+                </div>
             </div>
             
         </main>
@@ -696,10 +657,8 @@ HTML_TEMPLATE = """
                     data: { 
                         labels: ['Purchase Likelihood', 'Abandonment'], 
                         datasets: [{ 
-                            data: [50, 50], 
-                            backgroundColor: [currentTheme.success, currentTheme.danger], 
-                            borderWidth: 0,
-                            hoverOffset: 10
+                            data: [50, 50], backgroundColor: [currentTheme.success, currentTheme.danger], 
+                            borderWidth: 0, hoverOffset: 10
                         }] 
                     },
                     options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom' } } }
@@ -711,8 +670,7 @@ HTML_TEMPLATE = """
                     data: {
                         labels: globalFeatures,
                         datasets: [{
-                            data: [20, 20, 20, 20, 20], 
-                            backgroundColor: getPaletteArray(currentTheme),
+                            data: [20, 20, 20, 20, 20], backgroundColor: getPaletteArray(currentTheme),
                             borderWidth: 1, borderColor: 'rgba(0,0,0,0.5)'
                         }]
                     },
@@ -791,9 +749,12 @@ HTML_TEMPLATE = """
             btn.style.opacity = '0.7';
             btn.style.pointerEvents = 'none';
 
-            // UX FIX: Give visual feedback that a request has been fired
             const resCard = document.getElementById('mainStatusBoard');
+            const pathCard = document.getElementById('decisionPathCard');
             resCard.classList.add('processing-fade');
+            pathCard.classList.add('processing-fade');
+            
+            document.getElementById('terminalBody').innerHTML = '<span style="color: var(--accent-secondary);">> Processing mathematical nodes...</span>';
 
             const formData = new FormData(e.target);
             const dataObj = {};
@@ -802,8 +763,7 @@ HTML_TEMPLATE = """
             });
 
             try {
-                // UX FIX: Force a small 600ms delay so the user explicitly sees 
-                // the app processing data. This cures the "frozen app" illusion.
+                // 600ms artificial delay to show UI processing
                 await new Promise(resolve => setTimeout(resolve, 600));
 
                 const response = await fetch('/predict', {
@@ -822,13 +782,12 @@ HTML_TEMPLATE = """
             } catch (error) { 
                 alert('Connection terminated: ' + error.message); 
             } finally {
-                // Restore Button State
                 btn.innerHTML = 'Execute Purchase Inference';
                 btn.style.opacity = '1';
                 btn.style.pointerEvents = 'auto';
                 
-                // Restore Card Visbility
                 resCard.classList.remove('processing-fade');
+                pathCard.classList.remove('processing-fade');
             }
         });
 
@@ -836,10 +795,10 @@ HTML_TEMPLATE = """
             const currentTheme = document.body.className;
             const colors = themePalette[currentTheme];
 
+            // 1. Prediction Status update
             const resOut = document.getElementById('mainPredictionText');
             const resCard = document.getElementById('mainStatusBoard');
             
-            // Force reflow to restart CSS animations if output is exactly the same
             resCard.classList.remove('alert-pulse', 'success-pulse');
             void resCard.offsetWidth;
             
@@ -855,6 +814,7 @@ HTML_TEMPLATE = """
                 resCard.classList.add('alert-pulse');
             }
             
+            // 2. Metrics update
             document.getElementById('probPurchase').textContent = apiData.probability_purchase.toFixed(1) + '%';
             document.getElementById('probAbandon').textContent = apiData.probability_abandon.toFixed(1) + '%';
             
@@ -862,6 +822,27 @@ HTML_TEMPLATE = """
             convSpan.textContent = apiData.conversion_level;
             convSpan.style.color = (apiData.prediction_code === 1) ? colors.success : colors.danger;
 
+            // 3. Update Decision Path Terminal Window
+            const terminal = document.getElementById('terminalBody');
+            if (apiData.decision_path && apiData.decision_path.length > 0) {
+                let htmlOutput = '';
+                apiData.decision_path.forEach((rule, idx) => {
+                    htmlOutput += `<div class="rule-step">
+                        <span class="rule-bullet">[ Node ${idx} ]</span> 
+                        <span>${rule}</span>
+                    </div>`;
+                });
+                
+                let resultColor = apiData.prediction_code === 1 ? colors.success : colors.danger;
+                htmlOutput += `<div style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                    <strong style="color: ${resultColor};">>> FINAL LEAF NODE REACHED: ${apiData.prediction}</strong>
+                </div>`;
+                terminal.innerHTML = htmlOutput;
+            } else {
+                terminal.innerHTML = '<span style="color: var(--danger);">> Error: Unable to extract mathematical tree nodes.</span>';
+            }
+
+            // 4. Update Charts
             donutChart.data.datasets[0].data = [apiData.probability_purchase, apiData.probability_abandon];
             donutChart.update();
 
@@ -910,7 +891,6 @@ def predict():
         input_data = []
         for feature in feature_names:
             val = data.get(feature)
-            # Extra safety guard for Python parsing
             if val is None or str(val).strip() == '':
                 val = 0.0
             input_data.append(float(val))
@@ -918,7 +898,7 @@ def predict():
         features_array = np.array(input_data).reshape(1, -1)
         prediction_val = int(model.predict(features_array)[0])
         
-        # Robust Probability checking for Sklearn Trees
+        # Determine Probabilities
         if hasattr(model, 'predict_proba'):
             prob_array = model.predict_proba(features_array)[0]
             if len(prob_array) >= 2:
@@ -934,6 +914,38 @@ def predict():
         else:
             result_text = "User will not purchase laptop"
             conv_potential = "Very Low" if probabilities[0] > 0.8 else "Low"
+
+        # --- EXTRACT DECISION PATH MATHEMATICS ---
+        decision_path_rules = []
+        try:
+            if hasattr(model, 'tree_') and hasattr(model, 'decision_path'):
+                # Get node indicator matrix
+                node_indicator = model.decision_path(features_array)
+                leaf_id = model.apply(features_array)
+                sample_id = 0
+                
+                # Get the sequence of nodes passed through
+                node_index = node_indicator.indices[node_indicator.indptr[sample_id]:node_indicator.indptr[sample_id + 1]]
+                
+                for node_id in node_index:
+                    # If it's a leaf node, we stop extracting rules
+                    if leaf_id[sample_id] == node_id:
+                        continue
+                    
+                    # Mathematical rules for this node
+                    feature_idx = model.tree_.feature[node_id]
+                    threshold = model.tree_.threshold[node_id]
+                    feature_name = feature_names[feature_idx]
+                    feature_val = features_array[0, feature_idx]
+
+                    if feature_val <= threshold:
+                        decision_path_rules.append(f"IF <span style='color:var(--text-primary);'>{feature_name} ( {feature_val} )</span> is less than or equal to threshold [ {threshold:.2f} ]")
+                    else:
+                        decision_path_rules.append(f"IF <span style='color:var(--text-primary);'>{feature_name} ( {feature_val} )</span> is greater than threshold [ {threshold:.2f} ]")
+            else:
+                decision_path_rules.append("Underlying model structure does not support node extraction.")
+        except Exception as e:
+            decision_path_rules.append(f"Unable to parse algorithm tree: {str(e)}")
             
         return jsonify({
             'prediction': result_text,
@@ -941,6 +953,7 @@ def predict():
             'probability_purchase': float(probabilities[1] * 100),
             'probability_abandon': float(probabilities[0] * 100),
             'conversion_level': conv_potential,
+            'decision_path': decision_path_rules,
             'input_echo': input_data
         })
 
